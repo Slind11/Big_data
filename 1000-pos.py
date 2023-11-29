@@ -1,6 +1,8 @@
 import pandas as pd
 from faker import Faker
 import random
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 # Создание случайных данных с помощью библиотеки Faker
 fake = Faker("ru_RU")
@@ -26,4 +28,25 @@ data = {
 
 df = pd.DataFrame(data)
 
-print(df.head(20))
+df['Категория возраста'] = pd.cut(df['Возраст'], bins=[18, 30, 40, 50, 60, 70], labels=['18-30', '31-40', '41-50', '51-60', '61-70'])
+
+print("Статистика по числовым данным:")
+print(df['Возраст'].describe())
+print("\nРаспределение семейного положения:")
+print(df['Семейное положение'].value_counts())
+
+# Визуализация данных
+plt.figure(figsize=(12, 6))
+
+# Гистограмма распределения возраста
+plt.subplot(1, 2, 1)
+sns.histplot(df['Возраст'], bins=20, kde=True)
+plt.title('Распределение возраста')
+
+# Круговая диаграмма семейного положения
+plt.subplot(1, 2, 2)
+df['Семейное положение'].value_counts().plot(kind='pie', autopct='%1.1f%%')
+plt.title('Семейное положение')
+
+plt.tight_layout()
+plt.show()
